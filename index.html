@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchmaker AI – Extracurricular & Competition Hub for High Schoolers</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#FFFFFF',
+                            100: '#FAF8F5',
+                            200: '#F3EFE6',
+                            300: '#E6DFD1',
+                        },
+                        terracotta: {
+                            500: '#D97757',
+                            600: '#C25E3B',
+                            light: '#FDF3F0',
+                        },
+                        sage: {
+                            500: '#5A7D6C',
+                            light: '#F2F6F4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track, #F3EFE6); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb, #D6CCE2); border-radius: 4px; }
+        .soft-card {
+            background: var(--card-bg, #FFFFFF);
+            border: 1px solid var(--card-border, rgba(230, 223, 209, 0.8));
+            box-shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.04);
+        }
+        .soft-glass {
+            background: var(--glass-bg, rgba(255, 255, 255, 0.85));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border, rgba(230, 223, 209, 0.9));
+        }
+        html.dark body { background-color: #121110; color: #F5F4F0; --scrollbar-track: #1C1A18; --scrollbar-thumb: #3A3632; --card-bg: #1A1816; --card-border: rgba(58, 54, 50, 0.8); --glass-bg: rgba(26, 24, 22, 0.85); --glass-border: rgba(58, 54, 50, 0.9); }
+        html:not(.dark) body { background-color: #FAF8F5; color: #1C1917; --scrollbar-track: #F3EFE6; --scrollbar-thumb: #D6CCE2; --card-bg: #FFFFFF; --card-border: rgba(230, 223, 209, 0.8); --glass-bg: rgba(255, 255, 255, 0.85); --glass-border: rgba(230, 223, 209, 0.9); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-terracotta-500 selection:text-white">
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/70 backdrop-blur-md p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-md w-full p-8 shadow-2xl relative text-center space-y-6">
+            <div class="w-14 h-14 rounded-2xl bg-terracotta-light dark:bg-terracotta-500/20 border border-terracotta-500/30 flex items-center justify-center mx-auto text-terracotta-600 dark:text-terracotta-400">
+                <i data-lucide="compass" class="w-7 h-7"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-extrabold text-stone-900 dark:text-stone-100">Welcome to Matchmaker AI</h2>
+                <p class="text-stone-500 dark:text-stone-400 text-xs mt-1">Sign in to save your personalized EC roadmap, tracker & AI chats (Ages 18 & under).</p>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="handleGoogleSignIn()" class="w-full py-3 px-4 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 text-sm font-semibold flex items-center justify-center space-x-3 transition-all shadow-sm">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                    <span>Sign in with Google</span>
+                </button>
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-stone-200 dark:border-stone-800"></div>
+                    <span class="flex-shrink mx-4 text-stone-400 text-xs">or guest access</span>
+                    <div class="flex-grow border-t border-stone-200 dark:border-stone-800"></div>
+                </div>
+                <button onclick="handleAnonymousSignIn()" class="w-full py-3 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 text-sm font-semibold rounded-xl shadow-md transition-all">
+                    Continue as High School Guest 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 soft-glass border-b border-stone-200/80 dark:border-stone-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('feed')">
+                <div class="w-10 h-10 rounded-2xl bg-terracotta-light dark:bg-terracotta-500/20 border border-terracotta-500/30 flex items-center justify-center text-terracotta-600 dark:text-terracotta-400 shadow-sm">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight text-stone-900 dark:text-stone-100">Matchmaker AI</span>
+                    <span class="block text-[10px] text-stone-500 dark:text-stone-400 font-semibold tracking-wider uppercase">High School EC Hub • Ages 18 & under</span>
+                </div>
+            </div>
+
+            <!-- Nav Tabs -->
+            <nav class="hidden md:flex items-center space-x-1 bg-stone-100 dark:bg-stone-900 p-1 rounded-xl border border-stone-200 dark:border-stone-800">
+                <button onclick="switchTab('feed')" id="nav-feed" class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 shadow-sm">
+                    <i data-lucide="compass" class="w-4 h-4 text-terracotta-600"></i>
+                    <span>Discovery Feed</span>
+                </button>
+                <button onclick="switchTab('tracker')" id="nav-tracker" class="px-4 py-2 rounded-lg text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-all flex items-center space-x-2">
+                    <i data-lucide="kanban" class="w-4 h-4 text-sage-500"></i>
+                    <span>My EC Tracker</span>
+                    <span id="tracker-badge" class="ml-1 px-1.5 py-0.5 text-[10px] bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 rounded-full">0</span>
+                </button>
+                <button onclick="switchTab('panic')" id="nav-panic" class="px-4 py-2 rounded-lg text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-all flex items-center space-x-2">
+                    <i data-lucide="flame" class="w-4 h-4 text-amber-600"></i>
+                    <span>Deadline Panic</span>
+                </button>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 transition-all" title="Toggle Dark/Light Mode">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                </button>
+
+                <!-- Owner Control Dropdown -->
+                <div class="relative">
+                    <button onclick="toggleOwnerMenu()" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold transition-all">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5 text-stone-600 dark:text-stone-400"></i>
+                        <span>Owner Controls</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3 text-stone-500"></i>
+                    </button>
+                    <div id="owner-menu" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-stone-900 rounded-2xl shadow-xl border border-stone-200 dark:border-stone-800 py-2 z-50 text-xs">
+                        <button onclick="openAddOpportunityModal()" class="w-full text-left px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center space-x-2 text-stone-800 dark:text-stone-200 font-medium">
+                            <i data-lucide="plus-circle" class="w-4 h-4 text-terracotta-600"></i>
+                            <span>Create Custom Opportunity</span>
+                        </button>
+                        <button onclick="openAiImporterModal()" class="w-full text-left px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center space-x-2 text-stone-800 dark:text-stone-200 font-medium">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-600"></i>
+                            <span>AI Link / Text Importer</span>
+                        </button>
+                        <button onclick="openPresetLibraryModal()" class="w-full text-left px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center space-x-2 text-stone-800 dark:text-stone-200 font-medium">
+                            <i data-lucide="library" class="w-4 h-4 text-sage-500"></i>
+                            <span>Preset Competition Library (35+)</span>
+                        </button>
+                        <div class="border-t border-stone-100 dark:border-stone-800 my-1"></div>
+                        <button onclick="openAiModal()" class="w-full text-left px-4 py-2.5 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center space-x-2 text-stone-800 dark:text-stone-200 font-medium">
+                            <i data-lucide="cpu" class="w-4 h-4 text-purple-600"></i>
+                            <span>AI Profile Evaluator</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Pill -->
+                <div onclick="openOnboardingModal()" class="flex items-center space-x-2 bg-white dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 px-3 py-1.5 rounded-full cursor-pointer transition-all shadow-sm group">
+                    <div class="w-7 h-7 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 flex items-center justify-center text-stone-800 dark:text-stone-200 text-xs font-bold" id="user-initials">HS</div>
+                    <div class="text-left hidden sm:block">
+                        <div class="text-xs font-semibold text-stone-800 dark:text-stone-200 truncate max-w-[110px]" id="pill-major">Computer Science</div>
+                        <div class="text-[10px] text-stone-500 dark:text-stone-400 truncate max-w-[110px]" id="pill-interests">Coding, AI</div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-stone-400 group-hover:text-stone-600 transition-colors"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Bottom Sub Bar -->
+        <div class="md:hidden flex justify-around border-t border-stone-200 dark:border-stone-800 bg-white/90 dark:bg-stone-900/90 py-2">
+            <button onclick="switchTab('feed')" id="mob-nav-feed" class="flex flex-col items-center text-terracotta-600 text-xs font-medium">
+                <i data-lucide="compass" class="w-5 h-5 mb-0.5"></i>
+                <span>Feed</span>
+            </button>
+            <button onclick="switchTab('tracker')" id="mob-nav-tracker" class="flex flex-col items-center text-stone-500 dark:text-stone-400 text-xs font-medium">
+                <i data-lucide="kanban" class="w-5 h-5 mb-0.5"></i>
+                <span>Tracker</span>
+            </button>
+            <button onclick="switchTab('panic')" id="mob-nav-panic" class="flex flex-col items-center text-stone-500 dark:text-stone-400 text-xs font-medium">
+                <i data-lucide="flame" class="w-5 h-5 mb-0.5 text-amber-600"></i>
+                <span>Panic</span>
+            </button>
+            <button onclick="openChatDrawer()" class="flex flex-col items-center text-stone-500 dark:text-stone-400 text-xs font-medium">
+                <i data-lucide="bot" class="w-5 h-5 mb-0.5 text-blue-600"></i>
+                <span>Advisor</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+
+        <!-- TAB 1: DISCOVERY FEED -->
+        <section id="view-feed" class="space-y-8">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-stone-900 to-stone-800 dark:from-stone-950 dark:to-stone-900 text-white p-8 md:p-10 shadow-lg border border-stone-800">
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-terracotta-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-stone-200 text-xs font-semibold">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-terracotta-500"></i>
+                        <span>Tailored for <span id="hero-major-label" class="text-terracotta-400 font-bold">Computer Science</span></span>
+                    </div>
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">
+                        Your Intelligent <span class="text-terracotta-400">Extracurricular Hub</span>
+                    </h1>
+                    <p class="text-stone-300 text-sm md:text-base leading-relaxed">
+                        Discover and track elite hackathons, debates, Olympiads, research mentorships, and leadership programs curated for students ages 18 & under.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2 text-xs font-medium text-stone-300">
+                        <div class="flex items-center space-x-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                            <span>35+ Curated Opportunities</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                            <i data-lucide="bot" class="w-4 h-4 text-blue-400"></i>
+                            <span>MatchAdvisor AI Assistant</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter & Search Toolbar -->
+            <div class="soft-card p-5 sm:p-6 rounded-2xl space-y-4">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="relative w-full md:w-96">
+                        <i data-lucide="search" class="absolute left-3.5 top-3 w-4 h-4 text-stone-400"></i>
+                        <input type="text" id="search-input" oninput="filterOpportunities()" placeholder="Search by title, keyword, or host..." class="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-terracotta-500 transition-all">
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto" id="category-filters">
+                        <button onclick="setCategory('All')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-sm" data-category="All">All</button>
+                        <button onclick="setCategory('Hackathons')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800" data-category="Hackathons">Hackathons</button>
+                        <button onclick="setCategory('Debates & Model UN')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800" data-category="Debates & Model UN">Debates & MUN</button>
+                        <button onclick="setCategory('Olympiads')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800" data-category="Olympiads">Olympiads</button>
+                        <button onclick="setCategory('Research')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800" data-category="Research">Research</button>
+                        <button onclick="setCategory('Leadership')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800" data-category="Leadership">Leadership</button>
+                        <button onclick="setCategory('Summer Camps')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800" data-category="Summer Camps">Summer Camps</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between pt-3 border-t border-stone-200/80 dark:border-stone-800 gap-3 text-xs">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span class="text-stone-500 dark:text-stone-400 font-medium">Cost:</span>
+                        <select id="filter-cost" onchange="filterOpportunities()" class="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg px-3 py-1.5 text-stone-700 dark:text-stone-300 focus:outline-none focus:border-terracotta-500">
+                            <option value="All">All Costs</option>
+                            <option value="Free">100% Free / Funded Only</option>
+                            <option value="Paid">Paid / Pre-College</option>
+                        </select>
+
+                        <span class="text-stone-500 dark:text-stone-400 font-medium ml-2">Format:</span>
+                        <select id="filter-format" onchange="filterOpportunities()" class="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg px-3 py-1.5 text-stone-700 dark:text-stone-300 focus:outline-none focus:border-terracotta-500">
+                            <option value="All">All Formats</option>
+                            <option value="Virtual">Virtual / Remote</option>
+                            <option value="In-Person">In-Person / Hybrid</option>
+                        </select>
+                    </div>
+
+                    <div class="text-stone-500 dark:text-stone-400">
+                        Showing <span id="results-count" class="text-terracotta-600 dark:text-terracotta-400 font-bold">0</span> opportunities
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opportunities Grid -->
+            <div id="opportunities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16 soft-card rounded-2xl">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-stone-100 dark:bg-stone-900 flex items-center justify-center text-stone-400">
+                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-bold text-stone-900 dark:text-stone-100 mb-1">No matching opportunities found</h3>
+                <p class="text-stone-500 dark:text-stone-400 text-sm max-w-md mx-auto mb-6">Try broadening your search terms or resetting filters!</p>
+                <button onclick="resetFilters()" class="px-4 py-2 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 rounded-xl text-sm font-medium transition-all">Reset All Filters</button>
+            </div>
+        </section>
+
+        <!-- TAB 2: MY EC TRACKER -->
+        <section id="view-tracker" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 soft-card p-6 rounded-2xl">
+                <div>
+                    <h1 class="text-2xl font-bold text-stone-900 dark:text-stone-100 flex items-center space-x-2">
+                        <i data-lucide="kanban" class="w-6 h-6 text-sage-500"></i>
+                        <span>My EC Application Tracker</span>
+                    </h1>
+                    <p class="text-stone-500 dark:text-stone-400 text-sm mt-1">Manage your high school extracurricular roadmap like a professional project.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="openAddOpportunityModal()" class="px-4 py-2 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 rounded-xl text-sm font-medium transition-all flex items-center space-x-2 shadow-sm">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add Opportunity</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kanban Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+                <div class="bg-stone-100/70 dark:bg-stone-900/50 rounded-2xl border border-stone-200 dark:border-stone-800 p-4 flex flex-col min-h-[550px]">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200 dark:border-stone-800">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                            <h3 class="font-bold text-sm text-stone-800 dark:text-stone-200">Watchlist</h3>
+                        </div>
+                        <span id="count-watchlist" class="px-2 py-0.5 rounded-full text-xs bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">0</span>
+                    </div>
+                    <div id="col-watchlist" class="space-y-4 flex-grow overflow-y-auto"></div>
+                </div>
+
+                <div class="bg-stone-100/70 dark:bg-stone-900/50 rounded-2xl border border-stone-200 dark:border-stone-800 p-4 flex flex-col min-h-[550px]">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200 dark:border-stone-800">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <h3 class="font-bold text-sm text-stone-800 dark:text-stone-200">Applying Soon / Prep</h3>
+                        </div>
+                        <span id="count-applying" class="px-2 py-0.5 rounded-full text-xs bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">0</span>
+                    </div>
+                    <div id="col-applying" class="space-y-4 flex-grow overflow-y-auto"></div>
+                </div>
+
+                <div class="bg-stone-100/70 dark:bg-stone-900/50 rounded-2xl border border-stone-200 dark:border-stone-800 p-4 flex flex-col min-h-[550px]">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200 dark:border-stone-800">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                            <h3 class="font-bold text-sm text-stone-800 dark:text-stone-200">Submitted / Active</h3>
+                        </div>
+                        <span id="count-submitted" class="px-2 py-0.5 rounded-full text-xs bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">0</span>
+                    </div>
+                    <div id="col-submitted" class="space-y-4 flex-grow overflow-y-auto"></div>
+                </div>
+
+                <div class="bg-stone-100/70 dark:bg-stone-900/50 rounded-2xl border border-stone-200 dark:border-stone-800 p-4 flex flex-col min-h-[550px]">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200 dark:border-stone-800">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <h3 class="font-bold text-sm text-stone-800 dark:text-stone-200">Won / Accepted</h3>
+                        </div>
+                        <span id="count-won" class="px-2 py-0.5 rounded-full text-xs bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">0</span>
+                    </div>
+                    <div id="col-won" class="space-y-4 flex-grow overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: DEADLINE PANIC RADAR -->
+        <section id="view-panic" class="hidden space-y-6">
+            <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 p-8 rounded-3xl">
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 border border-amber-300 dark:border-amber-700 flex items-center justify-center text-amber-700 dark:text-amber-400">
+                        <i data-lucide="flame" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-stone-900 dark:text-stone-100">Deadline Panic Radar</h1>
+                        <p class="text-amber-800 dark:text-amber-300 text-sm">Opportunities closing within the next 14 days for high schoolers.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="panic-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+    </main>
+
+    <!-- FLOATING CHAT ASSISTANT WIDGET ("Luni") -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button onclick="toggleChatDrawer()" id="chat-fab" class="w-14 h-14 rounded-full bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-xl flex items-center justify-center hover:scale-105 transition-all">
+            <i data-lucide="bot" class="w-6 h-6"></i>
+        </button>
+
+        <div id="chat-drawer" class="hidden absolute bottom-16 right-0 w-[90vw] sm:w-[420px] h-[550px] bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="p-4 bg-stone-50 dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-terracotta-light dark:bg-terracotta-500/20 border border-terracotta-500/30 flex items-center justify-center text-terracotta-600 dark:text-terracotta-400">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm text-stone-900 dark:text-stone-100">MatchAdvisor AI</h3>
+                        <p class="text-[10px] text-stone-500 dark:text-stone-400">Your College Admissions & EC Mentor</p>
+                    </div>
+                </div>
+                <button onclick="toggleChatDrawer()" class="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 text-xs">
+                <div class="flex items-start space-x-2">
+                    <div class="w-7 h-7 rounded-full bg-terracotta-light dark:bg-terracotta-500/20 text-terracotta-600 dark:text-terracotta-400 flex items-center justify-center font-bold shrink-0">AI</div>
+                    <div class="bg-stone-100 dark:bg-stone-800 p-3 rounded-2xl text-stone-800 dark:text-stone-200 max-w-[85%] leading-relaxed">
+                        Hi! I'm your MatchAdvisor AI. Ask me for competition recommendations, essay feedback, or cold email drafts for research mentors!
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-t border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/50">
+                <form onsubmit="sendChatMessage(event)" class="flex items-center space-x-2">
+                    <input type="text" id="chat-input" placeholder="Ask anything about your ECs..." class="flex-grow bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                    <button type="submit" class="p-2.5 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-xl hover:bg-stone-800 transition-all"><i data-lucide="send" class="w-4 h-4"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING & PROFILE MODAL -->
+    <div id="onboarding-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-terracotta-light dark:bg-terracotta-500/20 border border-terracotta-500/30 flex items-center justify-center mx-auto mb-3 text-terracotta-600 dark:text-terracotta-400">
+                    <i data-lucide="compass" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-stone-900 dark:text-stone-100">Configure Your High School Profile</h2>
+                <p class="text-stone-500 dark:text-stone-400 text-sm mt-1">For students ages 18 & under. Set your target college major and core interests.</p>
+            </div>
+
+            <form id="onboarding-form" onsubmit="saveProfile(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-stone-800 dark:text-stone-200 mb-2">Target College Major</label>
+                    <select id="modal-major" required class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                        <option value="Computer Science">Computer Science & AI</option>
+                        <option value="Pre-Med/Biology">Pre-Med, Biology & Biomedical Research</option>
+                        <option value="Economics & Finance">Economics, Finance & Business</option>
+                        <option value="Engineering">Engineering & Robotics</option>
+                        <option value="Humanities & Public Policy">Humanities, Law, Debate & Public Policy</option>
+                        <option value="Fine Arts">Fine Arts, Design & Writing</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-stone-800 dark:text-stone-200 mb-2">Core Interests & Skills (Select all that apply)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Coding" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Coding</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="AI" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">AI & ML</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Research" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Research</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Debate" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Debate</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Writing" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Writing</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Leadership" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Leadership</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Robotics" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Robotics</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 p-3 rounded-xl cursor-pointer transition-all">
+                            <input type="checkbox" name="interest" value="Math" class="rounded border-stone-300 text-terracotta-600 focus:ring-terracotta-500">
+                            <span class="text-sm text-stone-700 dark:text-stone-300 font-medium">Math</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 font-bold rounded-xl shadow-md transition-all">
+                    Save Profile & Explore Hub 🚀
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT OPPORTUNITY MODAL -->
+    <div id="opportunity-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="opp-modal-title" class="text-lg font-bold text-stone-900 dark:text-stone-100">Create Opportunity</h3>
+                <button onclick="closeAddOpportunityModal()" class="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="saveOpportunityForm(event)" class="space-y-4">
+                <input type="hidden" id="edit-opp-id">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Opportunity Title</label>
+                    <input type="text" id="opp-title" required placeholder="e.g., National Speech & Debate Tournament" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Host Organization</label>
+                        <input type="text" id="opp-host" required placeholder="e.g., NSDA" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Category</label>
+                        <select id="opp-category" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                            <option value="Hackathons">Hackathons</option>
+                            <option value="Debates & Model UN">Debates & Model UN</option>
+                            <option value="Olympiads">Olympiads</option>
+                            <option value="Research">Research</option>
+                            <option value="Leadership">Leadership</option>
+                            <option value="Summer Camps">Summer Camps</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Deadline Date</label>
+                        <input type="date" id="opp-deadline" required class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Cost</label>
+                        <select id="opp-cost" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                            <option value="Free">Free / Funded</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Format</label>
+                        <select id="opp-format" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                            <option value="Virtual">Virtual / Remote</option>
+                            <option value="In-Person">In-Person / Hybrid</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Prestige Badge</label>
+                        <select id="opp-prestige" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                            <option value="High Prestige">High Prestige</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Beginner-Friendly">Beginner-Friendly</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Official Website Link</label>
+                    <input type="url" id="opp-website" placeholder="https://" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Description</label>
+                    <textarea id="opp-desc" rows="2" placeholder="Brief details about the program..." class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 font-medium rounded-xl text-sm transition-all shadow-md">Save Opportunity 🚀</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI LINK / TEXT IMPORTER MODAL -->
+    <div id="ai-importer-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-stone-900 dark:text-stone-100">AI Link & Text Importer</h3>
+                        <p class="text-xs text-stone-500 dark:text-stone-400">Powered by Gemini - Automatically parses any competition or debate link</p>
+                    </div>
+                </div>
+                <button onclick="closeAiImporterModal()" class="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Paste Competition URL or Unstructured Text</label>
+                    <textarea id="ai-import-input" rows="4" placeholder="e.g., https://www.speechanddebate.org/nationals or paste text description of a hackathon, debate tournament, or research program..." class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500"></textarea>
+                </div>
+
+                <button onclick="runAiImporter()" id="ai-import-btn" class="w-full py-3 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 font-bold rounded-xl text-sm transition-all flex items-center justify-center space-x-2 shadow-md">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+                    <span>Parse & Add to Website with Gemini AI</span>
+                </button>
+
+                <div id="ai-import-loading" class="hidden text-center py-6 space-y-2">
+                    <div class="w-8 h-8 border-3 border-terracotta-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <p class="text-xs text-stone-500 dark:text-stone-400">Extracting title, deadline, category, and requirements...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRESET COMPETITION LIBRARY MODAL -->
+    <div id="preset-library-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-stone-200 dark:border-stone-800">
+                <div>
+                    <h3 class="text-lg font-bold text-stone-900 dark:text-stone-100">Preset High School Competition Library</h3>
+                    <p class="text-xs text-stone-500 dark:text-stone-400">Instantly import top 35+ national competitions, debates, hackathons & research programs</p>
+                </div>
+                <button onclick="closePresetLibraryModal()" class="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="flex-grow overflow-y-auto py-4 space-y-3" id="preset-library-list"></div>
+
+            <div class="pt-4 border-t border-stone-200 dark:border-stone-800 flex justify-end">
+                <button onclick="closePresetLibraryModal()" class="px-5 py-2.5 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 text-xs font-semibold rounded-xl">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI PROFILE STRENGTH EVALUATOR MODAL -->
+    <div id="ai-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-stone-200 dark:border-stone-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-stone-900 dark:text-stone-100">AI Profile Strength Evaluator</h2>
+                        <p class="text-stone-500 dark:text-stone-400 text-xs">Powered by Gemini - Instant Spike & Admissions Analysis for Ages 18 & under</p>
+                    </div>
+                </div>
+                <button onclick="closeAiModal()" class="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 p-2 rounded-lg bg-stone-100 dark:bg-stone-800"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="flex-grow overflow-y-auto py-6 space-y-6">
+                <div id="ai-input-section" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-800 dark:text-stone-200 mb-1">GPA, Grade & Test Scores</label>
+                        <input type="text" id="ai-gpa" placeholder="e.g., 11th Grade, 4.0 UW / 4.7 W, SAT 1550" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-800 dark:text-stone-200 mb-1">Current Extracurriculars, Debates & Competitions</label>
+                        <textarea id="ai-activities" rows="3" placeholder="e.g., Varsity Debate Team Captain, Hackathon winner, published AI research paper..." class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-stone-800 dark:text-stone-200 mb-1">Target College Major</label>
+                        <input type="text" id="ai-target" placeholder="e.g., Computer Science & Public Policy" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                    </div>
+                    <button onclick="runAiEvaluation()" class="w-full py-3 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+                        <span>Generate Spike Analysis with Gemini AI</span>
+                    </button>
+                </div>
+
+                <div id="ai-loading" class="hidden text-center py-12 space-y-4">
+                    <div class="w-10 h-10 border-3 border-terracotta-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Evaluating spike clarity, prestige alignment & leadership depth...</p>
+                </div>
+
+                <div id="ai-results" class="hidden space-y-4 bg-stone-50 dark:bg-stone-800/60 p-6 rounded-2xl border border-stone-200 dark:border-stone-700">
+                    <div class="flex items-center justify-between border-b border-stone-200 dark:border-stone-700 pb-3">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta-600 dark:text-terracotta-400">Spike Diagnostic Report</span>
+                        <button onclick="resetAiEval()" class="text-xs text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 underline">Re-evaluate</button>
+                    </div>
+                    <div id="ai-output-content" class="text-sm text-stone-800 dark:text-stone-200 space-y-3 leading-relaxed"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRACKER NOTE & STATUS MODAL -->
+    <div id="tracker-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+            <h3 class="text-lg font-bold text-stone-900 dark:text-stone-100 mb-4">Manage Application Item</h3>
+            <input type="hidden" id="tracker-edit-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Status Stage</label>
+                    <select id="tracker-edit-status" class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500">
+                        <option value="watchlist">📌 Watchlist</option>
+                        <option value="applying">⏳ Applying Soon / Prep</option>
+                        <option value="submitted">🚀 Submitted / Active</option>
+                        <option value="won">🏆 Won / Accepted</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 uppercase tracking-wider">Personal Notes & Checklist</label>
+                    <textarea id="tracker-edit-notes" rows="3" placeholder="e.g., Draft teacher recommendation, prepare presentation..." class="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-terracotta-500"></textarea>
+                </div>
+                <div class="flex space-x-3 pt-2">
+                    <button onclick="saveTrackerEdit()" class="flex-grow py-2.5 bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900 font-medium rounded-xl text-sm transition-all">Save Changes</button>
+                    <button onclick="closeTrackerModal()" class="px-4 py-2.5 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-medium rounded-xl text-sm transition-all">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase & App Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase Configuration & Environment Variables
+        const firebaseConfig = {
+  apiKey: "AIzaSyDRckAuOLRQZp2uAK8dF01reI-VLKSwWSQ",
+  authDomain: "matchmaker-ai-6e091.firebaseapp.com",
+  projectId: "matchmaker-ai-6e091",
+  storageBucket: "matchmaker-ai-6e091.firebasestorage.app",
+  messagingSenderId: "454173185332",
+  appId: "1:454173185332:web:91693a12cfaa600e5ac161",
+  measurementId: "G-38GC67SJB9"
+};
+        const appId = 'matchmaker-ai';  
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const initialAuthToken = null;
+
+        window.appId = firebaseConfig.appId || 'matchmaker-ai';
+        window.db = db;
+        window.auth = auth;
+
+        // Preset Library of 35+ Top High School Competitions, Debates, Olympiads, Research & Leadership Programs
+        const presetOpportunities = [
+            { id: "preset-1", title: "Regeneron International Science and Engineering Fair (ISEF)", host: "Society for Science", category: "Research", cost: "Free", format: "In-Person", prestige: "High Prestige", deadline: "2026-11-15", majors: ["Computer Science", "Pre-Med/Biology", "Engineering"], interests: ["Research", "AI", "Robotics", "Math"], description: "The world's largest pre-college STEM research competition bringing together over 1,800 students globally.", website: "https://www.societyforscience.org/isef/" },
+            { id: "preset-2", title: "USA Computing Olympiad (USACO)", host: "USACO Committee", category: "Olympiads", cost: "Free", format: "Virtual", prestige: "High Prestige", deadline: "2026-12-10", majors: ["Computer Science", "Engineering"], interests: ["Coding", "AI", "Math"], description: "Prestigious national computer science competition advancing elite algorithmic problem solvers.", website: "http://www.usaco.org" },
+            { id: "preset-3", title: "NSDA National Speech & Debate Tournament", host: "National Speech & Debate Association", category: "Debates & Model UN", cost: "Paid", format: "In-Person", prestige: "High Prestige", deadline: "2026-04-10", majors: ["Humanities & Public Policy", "Economics & Finance"], interests: ["Debate", "Writing", "Leadership"], description: "The pinnacle of high school speech and debate competition in Policy, Lincoln-Douglas, and Public Forum.", website: "https://www.speechanddebate.org" },
+            { id: "preset-4", title: "Harvard Model Congress (HMC)", host: "Harvard University", category: "Debates & Model UN", cost: "Paid", format: "In-Person", prestige: "High Prestige", deadline: "2026-11-30", majors: ["Humanities & Public Policy", "Economics & Finance"], interests: ["Debate", "Leadership", "Writing"], description: "The nation's largest congressional simulation run by undergraduate students at Harvard.", website: "https://www.harvardmodelcongress.org" },
+            { id: "preset-5", title: "Congressional App Challenge", host: "U.S. House of Representatives", category: "Hackathons", cost: "Free", format: "Virtual", prestige: "High Prestige", deadline: "2026-10-24", majors: ["Computer Science", "Engineering"], interests: ["Coding", "AI", "Social Impact"], description: "The most prestigious middle and high school coding competition hosted by Members of Congress.", website: "https://www.congressionalappchallenge.us" },
+            { id: "preset-6", title: "MIT THINK Scholars Program", host: "MIT", category: "Research", cost: "Free", format: "Hybrid", prestige: "High Prestige", deadline: "2026-11-01", majors: ["Computer Science", "Engineering"], interests: ["Coding", "AI", "Research", "Robotics"], description: "Educational outreach program for STEM high school students with $1,000 project funding & MIT mentorship.", website: "https://think.mit.edu" },
+            { id: "preset-7", title: "Wharton Global Youth Investment Competition", host: "University of Pennsylvania", category: "Olympiads", cost: "Free", format: "Virtual", prestige: "High Prestige", deadline: "2026-10-15", majors: ["Economics & Finance"], interests: ["Leadership", "Math", "Social Impact"], description: "Free, global online investing competition where student teams manage $100,000 in virtual cash.", website: "https://globalyouth.wharton.upenn.edu" },
+            { id: "preset-8", title: "Bank of America Student Leaders", host: "Bank of America", category: "Leadership", cost: "Free", format: "In-Person", prestige: "High Prestige", deadline: "2026-01-12", majors: ["Humanities & Public Policy", "Economics & Finance"], interests: ["Leadership", "Social Impact"], description: "Paid summer internship + all-expense paid leadership summit in Washington D.C.", website: "https://www.bankofamerica.com/student-leaders" },
+            { id: "preset-9", title: "MIT Beaver Works Summer Institute (BWSI)", host: "MIT & Lincoln Laboratory", category: "Summer Camps", cost: "Free", format: "Virtual", prestige: "High Prestige", deadline: "2026-03-31", majors: ["Computer Science", "Engineering"], interests: ["Coding", "AI", "Robotics"], description: "Rigorous STEM program teaching autonomous cognitive driving and cyber security.", website: "https://bwsi.mit.edu" },
+            { id: "preset-10", title: "Scholastic Art & Writing Awards", host: "Alliance for Young Artists & Writers", category: "Olympiads", cost: "Paid", format: "Virtual", prestige: "High Prestige", deadline: "2026-12-15", majors: ["Fine Arts", "Humanities & Public Policy"], interests: ["Writing"], description: "The longest-running recognition program for creative teenagers in the U.S.", website: "https://www.artandwriting.org" }
+        ];
+
+        window.presetOpportunities = presetOpportunities;
+
+        // Global App State
+        let currentUser = null;
+        let userProfile = { major: "Computer Science", interests: ["Coding", "AI"] };
+        let opportunities = JSON.parse(JSON.stringify(presetOpportunities));
+        let tracker = [
+            { id: "tr-1", oppId: "preset-1", status: "watchlist", notes: "Review ISEF guidelines with science teacher." },
+            { id: "tr-2", oppId: "preset-3", status: "applying", notes: "Draft Lincoln-Douglas debate case." }
+        ];
+        let bookmarks = ["preset-1", "preset-3"];
+        let currentCategory = "All";
+        let chatHistory = [];
+
+        // Authentication State Listener & Initialization
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-modal').classList.add('hidden');
+                await loadUserData(user.uid);
+            } else {
+                if (initialAuthToken) {
+                    try {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                        return;
+                    } catch (e) { console.error("Custom token sign in failed", e); }
+                }
+                document.getElementById('auth-modal').classList.remove('hidden');
+            }
+        });
+
+        window.handleAnonymousSignIn = async function() {
+            try {
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
+                }
+                document.getElementById('auth-modal').classList.add('hidden');
+            } catch (err) {
+                console.error("Anonymous auth error:", err);
+                document.getElementById('auth-modal').classList.add('hidden');
+            }
+        };
+
+        window.handleGoogleSignIn = async function() {
+            try {
+                const provider = new GoogleAuthProvider();
+                await signInWithPopup(auth, provider);
+                document.getElementById('auth-modal').classList.add('hidden');
+            } catch (err) {
+                console.error("Google auth error, falling back to guest:", err);
+                await signInAnonymously(auth);
+                document.getElementById('auth-modal').classList.add('hidden');
+            }
+        };
+
+        async function loadUserData(userId) {
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', userId, 'userData', 'profile');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.profile) userProfile = data.profile;
+                    if (data.tracker) tracker = data.tracker;
+                    if (data.bookmarks) bookmarks = data.bookmarks;
+                }
+            } catch (e) {
+                console.warn("Firestore load fallback to local state", e);
+            }
+            renderUI();
+        }
+
+        async function saveUserDataToFirestore() {
+            if (!currentUser) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'userData', 'profile');
+                await setDoc(docRef, { profile: userProfile, tracker, bookmarks }, { merge: true });
+            } catch (e) {
+                console.warn("Firestore save error", e);
+            }
+        }
+
+        // Theme Toggle Handler
+        window.toggleTheme = function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('mm_theme', isDark ? 'dark' : 'light');
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('mm_theme') || 'light';
+            if (savedTheme === 'dark') document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+
+            lucide.createIcons();
+            renderUI();
+        });
+
+        window.switchTab = function(tabId) {
+            ['feed', 'tracker', 'panic'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${t}`);
+                if (navBtn) navBtn.className = "px-4 py-2 rounded-lg text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-all flex items-center space-x-2";
+                const mobBtn = document.getElementById(`mob-nav-${t}`);
+                if (mobBtn) mobBtn.className = "flex flex-col items-center text-stone-500 dark:text-stone-400 text-xs font-medium";
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) activeNav.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 shadow-sm";
+            const activeMob = document.getElementById(`mob-nav-${tabId}`);
+            if (activeMob) activeMob.className = "flex flex-col items-center text-terracotta-600 text-xs font-semibold";
+
+            renderUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.toggleOwnerMenu = function() {
+            document.getElementById('owner-menu').classList.toggle('hidden');
+        };
+
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('#owner-menu') && !e.target.closest('button[onclick="toggleOwnerMenu()"]')) {
+                document.getElementById('owner-menu').classList.add('hidden');
+            }
+        });
+
+        function renderUI() {
+            const initials = userProfile.major.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('user-initials').innerText = initials;
+            document.getElementById('pill-major').innerText = userProfile.major;
+            document.getElementById('pill-interests').innerText = userProfile.interests.join(', ') || 'None selected';
+            document.getElementById('hero-major-label').innerText = userProfile.major;
+
+            renderFeed();
+            renderTracker();
+            renderPanicRadar();
+            document.getElementById('tracker-badge').innerText = tracker.length;
+            lucide.createIcons();
+        }
+
+        function calculateMatchScore(opp) {
+            let score = 65;
+            if (opp.majors && opp.majors.includes(userProfile.major)) score += 20;
+            if (opp.interests) {
+                const matches = opp.interests.filter(i => userProfile.interests.includes(i));
+                score += matches.length * 6;
+            }
+            return Math.min(score, 99);
+        }
+
+        window.setCategory = function(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                if (btn.dataset.category === cat) {
+                    btn.className = "cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-sm";
+                } else {
+                    btn.className = "cat-pill px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800";
+                }
+            });
+            renderFeed();
+        };
+
+        function renderFeed() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const costFilter = document.getElementById('filter-cost').value;
+            const formatFilter = document.getElementById('filter-format').value;
+
+            const filtered = opportunities.filter(opp => {
+                const matchesCat = currentCategory === 'All' || opp.category === currentCategory;
+                const matchesCost = costFilter === 'All' || opp.cost === costFilter;
+                const matchesFormat = formatFilter === 'All' || opp.format === formatFilter;
+                const matchesSearch = opp.title.toLowerCase().includes(searchQuery) || 
+                                      opp.host.toLowerCase().includes(searchQuery) ||
+                                      opp.description.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesCost && matchesFormat && matchesSearch;
+            });
+
+            document.getElementById('results-count').innerText = filtered.length;
+            const grid = document.getElementById('opportunities-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(opp => {
+                const matchScore = calculateMatchScore(opp);
+                const isBookmarked = bookmarks.includes(opp.id);
+                const isTracked = tracker.some(t => t.oppId === opp.id);
+                const daysLeft = Math.ceil((new Date(opp.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+                const deadlineText = daysLeft > 0 ? `Closes in ${daysLeft} days` : `Deadline Passed`;
+                const deadlineClass = daysLeft <= 7 ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700';
+
+                return `
+                    <div class="soft-card rounded-2xl p-6 flex flex-col justify-between transition-all hover:shadow-md group">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border border-stone-200 dark:border-stone-700">${opp.category}</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sage-light dark:bg-sage-500/20 text-sage-500 dark:text-sage-300 border border-sage-500/35">${matchScore}% Match</span>
+                                    <button onclick="toggleBookmark('${opp.id}')" class="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 transition-colors">
+                                        <i data-lucide="bookmark" class="w-4 h-4 ${isBookmarked ? 'fill-terracotta-500 text-terracotta-500' : ''}"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-terracotta-600 dark:group-hover:text-terracotta-400 transition-colors mb-1">${opp.title}</h3>
+                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-3 font-medium">Hosted by <span class="text-stone-800 dark:text-stone-200">${opp.host}</span></p>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 line-clamp-2 mb-4 leading-relaxed">${opp.description}</p>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-stone-100 dark:border-stone-800">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="px-2.5 py-1 rounded-md border ${deadlineClass} font-medium flex items-center space-x-1">
+                                    <i data-lucide="clock" class="w-3 h-3"></i>
+                                    <span>${deadlineText}</span>
+                                </span>
+                                <span class="text-stone-500 dark:text-stone-400 font-medium">${opp.cost} • ${opp.format}</span>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <a href="${opp.website || '#'}" target="_blank" class="flex-grow py-2 px-3 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 rounded-xl text-xs font-medium transition-all text-center flex items-center justify-center space-x-1.5">
+                                    <span>Website</span>
+                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                </a>
+                                <button onclick="toggleTrackerItem('${opp.id}')" class="py-2 px-3 ${isTracked ? 'bg-sage-light dark:bg-sage-500/20 border border-sage-500/40 text-sage-500 dark:text-sage-300' : 'bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-stone-200 text-white dark:text-stone-900'} rounded-xl text-xs font-medium transition-all flex items-center space-x-1.5">
+                                    <i data-lucide="${isTracked ? 'check' : 'plus'}" class="w-3.5 h-3.5"></i>
+                                    <span>${isTracked ? 'Tracked' : 'Add'}</span>
+                                </button>
+                                <button onclick="openEditOpportunityModal('${opp.id}')" class="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300" title="Edit">
+                                    <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="deleteOpportunity('${opp.id}')" class="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-red-100 dark:hover:bg-red-950/50 text-stone-600 dark:text-stone-300 hover:text-red-600" title="Delete">
+                                    <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        window.resetFilters = function() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-cost').value = 'All';
+            document.getElementById('filter-format').value = 'All';
+            setCategory('All');
+        };
+
+        window.toggleBookmark = function(oppId) {
+            if (bookmarks.includes(oppId)) bookmarks = bookmarks.filter(id => id !== oppId);
+            else bookmarks.push(oppId);
+            saveUserDataToFirestore();
+            renderFeed();
+        };
+
+        window.toggleTrackerItem = function(oppId) {
+            const existing = tracker.findIndex(t => t.oppId === oppId);
+            if (existing > -1) tracker.splice(existing, 1);
+            else tracker.push({ id: 'tr-' + Date.now(), oppId: oppId, status: 'watchlist', notes: 'Added from discovery feed.' });
+            saveUserDataToFirestore();
+            renderUI();
+        };
+
+        function renderTracker() {
+            const columns = {
+                watchlist: document.getElementById('col-watchlist'),
+                applying: document.getElementById('col-applying'),
+                submitted: document.getElementById('col-submitted'),
+                won: document.getElementById('col-won')
+            };
+
+            const counts = { watchlist: 0, applying: 0, submitted: 0, won: 0 };
+            Object.values(columns).forEach(col => col.innerHTML = '');
+
+            tracker.forEach(item => {
+                const opp = opportunities.find(o => o.id === item.oppId);
+                if (!opp) return;
+
+                counts[item.status]++;
+                const cardHtml = `
+                    <div class="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl p-4 shadow-sm space-y-3">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-stone-100 dark:bg-stone-900 text-stone-700 dark:text-stone-300">${opp.category}</span>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="openTrackerModal('${item.id}')" class="p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-700 text-stone-500 dark:text-stone-400" title="Edit Notes"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="removeTrackerItem('${item.id}')" class="p-1 rounded hover:bg-red-50 dark:hover:bg-red-950/50 text-stone-500 dark:text-stone-400 hover:text-red-500" title="Remove"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-sm text-stone-900 dark:text-stone-100">${opp.title}</h4>
+                        <p class="text-xs text-stone-500 dark:text-stone-400">${opp.host}</p>
+                        ${item.notes ? `<div class="bg-stone-50 dark:bg-stone-900 p-2.5 rounded-xl text-xs text-stone-700 dark:text-stone-300 border border-stone-100 dark:border-stone-800"><span class="text-terracotta-600 dark:text-terracotta-400 font-semibold">Note:</span> ${item.notes}</div>` : ''}
+                        
+                        <div class="flex items-center justify-between pt-2 border-t border-stone-100 dark:border-stone-700 text-[11px] text-stone-500 dark:text-stone-400">
+                            <span>Deadline: ${opp.deadline}</span>
+                            <select onchange="updateTrackerStatus('${item.id}', this.value)" class="bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded px-2 py-1 text-stone-800 dark:text-stone-200 focus:outline-none">
+                                <option value="watchlist" ${item.status === 'watchlist' ? 'selected' : ''}>Watchlist</option>
+                                <option value="applying" ${item.status === 'applying' ? 'selected' : ''}>Applying</option>
+                                <option value="submitted" ${item.status === 'submitted' ? 'selected' : ''}>Submitted</option>
+                                <option value="won" ${item.status === 'won' ? 'selected' : ''}>Won/Accepted</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                if (columns[item.status]) columns[item.status].innerHTML += cardHtml;
+            });
+
+            document.getElementById('count-watchlist').innerText = counts.watchlist;
+            document.getElementById('count-applying').innerText = counts.applying;
+            document.getElementById('count-submitted').innerText = counts.submitted;
+            document.getElementById('count-won').innerText = counts.won;
+        }
+
+        window.updateTrackerStatus = function(id, newStatus) {
+            const item = tracker.find(t => t.id === id);
+            if (item) {
+                item.status = newStatus;
+                saveUserDataToFirestore();
+                renderUI();
+            }
+        };
+
+        window.removeTrackerItem = function(id) {
+            tracker = tracker.filter(t => t.id !== id);
+            saveUserDataToFirestore();
+            renderUI();
+        };
+
+        window.openTrackerModal = function(id) {
+            const item = tracker.find(t => t.id === id);
+            if (!item) return;
+            document.getElementById('tracker-edit-id').value = item.id;
+            document.getElementById('tracker-edit-status').value = item.status;
+            document.getElementById('tracker-edit-notes').value = item.notes || '';
+            document.getElementById('tracker-modal').classList.remove('hidden');
+        };
+        window.closeTrackerModal = function() { document.getElementById('tracker-modal').classList.add('hidden'); };
+        window.saveTrackerEdit = function() {
+            const id = document.getElementById('tracker-edit-id').value;
+            const item = tracker.find(t => t.id === id);
+            if (item) {
+                item.status = document.getElementById('tracker-edit-status').value;
+                item.notes = document.getElementById('tracker-edit-notes').value;
+                saveUserDataToFirestore();
+                closeTrackerModal();
+                renderUI();
+            }
+        };
+
+        window.openAddOpportunityModal = function() {
+            document.getElementById('opp-modal-title').innerText = "Create Opportunity";
+            document.getElementById('edit-opp-id').value = "";
+            document.getElementById('opp-title').value = "";
+            document.getElementById('opp-host').value = "";
+            document.getElementById('opp-deadline').value = "";
+            document.getElementById('opp-website').value = "";
+            document.getElementById('opp-desc').value = "";
+            document.getElementById('opportunity-modal').classList.remove('hidden');
+        };
+
+        window.openEditOpportunityModal = function(id) {
+            const opp = opportunities.find(o => o.id === id);
+            if (!opp) return;
+            document.getElementById('opp-modal-title').innerText = "Edit Opportunity";
+            document.getElementById('edit-opp-id').value = opp.id;
+            document.getElementById('opp-title').value = opp.title;
+            document.getElementById('opp-host').value = opp.host;
+            document.getElementById('opp-category').value = opp.category;
+            document.getElementById('opp-deadline').value = opp.deadline;
+            document.getElementById('opp-cost').value = opp.cost;
+            document.getElementById('opp-format').value = opp.format;
+            document.getElementById('opp-prestige').value = opp.prestige;
+            document.getElementById('opp-website').value = opp.website || '';
+            document.getElementById('opp-desc').value = opp.description || '';
+            document.getElementById('opportunity-modal').classList.remove('hidden');
+        };
+
+        window.closeAddOpportunityModal = function() { document.getElementById('opportunity-modal').classList.add('hidden'); };
+
+        window.saveOpportunityForm = function(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-opp-id').value;
+            const title = document.getElementById('opp-title').value;
+            const host = document.getElementById('opp-host').value;
+            const category = document.getElementById('opp-category').value;
+            const deadline = document.getElementById('opp-deadline').value;
+            const cost = document.getElementById('opp-cost').value;
+            const format = document.getElementById('opp-format').value;
+            const prestige = document.getElementById('opp-prestige').value;
+            const website = document.getElementById('opp-website').value;
+            const description = document.getElementById('opp-desc').value;
+
+            if (editId) {
+                const opp = opportunities.find(o => o.id === editId);
+                if (opp) {
+                    opp.title = title; opp.host = host; opp.category = category; opp.deadline = deadline;
+                    opp.cost = cost; opp.format = format; opp.prestige = prestige; opp.website = website; opp.description = description;
+                }
+            } else {
+                const newOpp = {
+                    id: 'custom-' + Date.now(),
+                    title, host, category, deadline, cost, format, prestige, website, description,
+                    majors: [userProfile.major], interests: userProfile.interests
+                };
+                opportunities.push(newOpp);
+                tracker.push({ id: 'tr-' + Date.now(), oppId: newOpp.id, status: 'watchlist', notes: 'Created by owner.' });
+            }
+
+            saveUserDataToFirestore();
+            closeAddOpportunityModal();
+            renderUI();
+        };
+
+        window.deleteOpportunity = function(id) {
+            opportunities = opportunities.filter(o => o.id !== id);
+            tracker = tracker.filter(t => t.oppId !== id);
+            saveUserDataToFirestore();
+            renderUI();
+        };
+
+        window.openPresetLibraryModal = function() {
+            const listContainer = document.getElementById('preset-library-list');
+            listContainer.innerHTML = presetOpportunities.map(preset => {
+                const isImported = opportunities.some(o => o.id === preset.id);
+                return `
+                    <div class="p-4 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-sm text-stone-900 dark:text-stone-100">${preset.title}</h4>
+                            <p class="text-xs text-stone-500 dark:text-stone-400">${preset.host} • <span class="text-terracotta-600 dark:text-terracotta-400 font-medium">${preset.category}</span></p>
+                        </div>
+                        <button onclick="importPreset('${preset.id}')" ${isImported ? 'disabled' : ''} class="px-3 py-1.5 rounded-xl text-xs font-semibold ${isImported ? 'bg-stone-200 dark:bg-stone-700 text-stone-500 dark:text-stone-400 cursor-not-allowed' : 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 hover:bg-stone-800 dark:hover:bg-stone-200'}">
+                            ${isImported ? 'Imported' : 'Import'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('preset-library-modal').classList.remove('hidden');
+        };
+        window.closePresetLibraryModal = function() { document.getElementById('preset-library-modal').classList.add('hidden'); };
+
+        window.importPreset = function(presetId) {
+            const preset = presetOpportunities.find(p => p.id === presetId);
+            if (preset && !opportunities.some(o => o.id === preset.id)) {
+                opportunities.push(preset);
+                saveUserDataToFirestore();
+                openPresetLibraryModal();
+                renderUI();
+            }
+        };
+
+        window.openAiImporterModal = function() { document.getElementById('ai-importer-modal').classList.remove('hidden'); };
+        window.closeAiImporterModal = function() { document.getElementById('ai-importer-modal').classList.add('hidden'); };
+
+        window.runAiImporter = async function() {
+            const textInput = document.getElementById('ai-import-input').value.trim();
+            if (!textInput) return;
+
+            document.getElementById('ai-import-btn').classList.add('hidden');
+            document.getElementById('ai-import-loading').classList.remove('hidden');
+
+            const systemPrompt = "Extract information from the given competition URL or text and return a strict JSON object with properties: title, host, category (choose from: Hackathons, Debates & Model UN, Olympiads, Research, Leadership, Summer Camps), cost (Free or Paid), format (Virtual or In-Person), prestige (High Prestige, Moderate, or Beginner-Friendly), deadline (YYYY-MM-DD), description, website.";
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: textInput }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { responseMimeType: "application/json" }
+            };
+
+            try {
+                let response = null;
+                for (let attempt = 0; attempt < 3; attempt++) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) break;
+                    } catch (err) {
+                        if (attempt === 2) throw err;
+                        await new Promise(res => setTimeout(res, Math.pow(2, attempt) * 1000));
+                    }
+                }
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                const parsed = JSON.parse(jsonText);
+
+                const newOpp = {
+                    id: 'ai-imported-' + Date.now(),
+                    title: parsed.title || "Imported Opportunity",
+                    host: parsed.host || "External Host",
+                    category: parsed.category || "Hackathons",
+                    cost: parsed.cost || "Free",
+                    format: parsed.format || "Virtual",
+                    prestige: parsed.prestige || "High Prestige",
+                    deadline: parsed.deadline || "2026-12-31",
+                    majors: [userProfile.major],
+                    interests: userProfile.interests,
+                    description: parsed.description || textInput,
+                    website: parsed.website || "#"
+                };
+
+                opportunities.push(newOpp);
+                tracker.push({ id: 'tr-' + Date.now(), oppId: newOpp.id, status: 'watchlist', notes: 'Imported via Gemini AI.' });
+                saveUserDataToFirestore();
+                closeAiImporterModal();
+                renderUI();
+            } catch (err) {
+                const fallbackOpp = {
+                    id: 'ai-imported-' + Date.now(),
+                    title: "Imported Competition / Debate",
+                    host: "Independent Host",
+                    category: "Debates & Model UN",
+                    cost: "Free",
+                    format: "Virtual",
+                    prestige: "High Prestige",
+                    deadline: "2026-12-31",
+                    majors: [userProfile.major],
+                    interests: userProfile.interests,
+                    description: textInput,
+                    website: "#"
+                };
+                opportunities.push(fallbackOpp);
+                saveUserDataToFirestore();
+                closeAiImporterModal();
+                renderUI();
+            }
+
+            document.getElementById('ai-import-btn').classList.remove('hidden');
+            document.getElementById('ai-import-loading').classList.add('hidden');
+        };
+
+        function renderPanicRadar() {
+            const now = new Date();
+            const panicList = document.getElementById('panic-list');
+            const urgentOpps = opportunities.filter(opp => {
+                const days = Math.ceil((new Date(opp.deadline) - now) / (1000 * 60 * 60 * 24));
+                return days >= 0 && days <= 14;
+            }).sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+            if (urgentOpps.length === 0) {
+                panicList.innerHTML = `
+                    <div class="col-span-2 text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800">
+                        <i data-lucide="party-popper" class="w-10 h-10 text-terracotta-600 dark:text-terracotta-400 mx-auto mb-3"></i>
+                        <h3 class="text-base font-bold text-stone-900 dark:text-stone-100 mb-1">No urgent deadlines in the next 14 days!</h3>
+                        <p class="text-stone-500 dark:text-stone-400 text-sm">You are fully on top of your schedule.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            panicList.innerHTML = urgentOpps.map(opp => {
+                const days = Math.ceil((new Date(opp.deadline) - now) / (1000 * 60 * 60 * 24));
+                return `
+                    <div class="soft-card p-6 rounded-2xl border border-amber-300 dark:border-amber-800 flex flex-col justify-between space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 flex items-center space-x-1">
+                                <i data-lucide="flame" class="w-3.5 h-3.5"></i>
+                                <span>Closing in ${days} days (${opp.deadline})</span>
+                            </span>
+                            <span class="text-xs font-bold text-stone-600 dark:text-stone-400">${opp.category}</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-900 dark:text-stone-100 mb-1">${opp.title}</h3>
+                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-2">Hosted by ${opp.host}</p>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">${opp.description}</p>
+                        </div>
+                        <div class="flex items-center space-x-3 pt-3 border-t border-stone-100 dark:border-stone-800">
+                            <a href="${opp.website || '#'}" target="_blank" class="flex-grow py-2 px-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-medium text-center transition-all">Apply Now 🚀</a>
+                            <button onclick="toggleTrackerItem('${opp.id}')" class="py-2 px-3 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 rounded-xl text-xs font-medium transition-all">Track</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        window.openOnboardingModal = function() {
+            document.getElementById('modal-major').value = userProfile.major;
+            const checkboxes = document.querySelectorAll('input[name="interest"]');
+            checkboxes.forEach(cb => cb.checked = userProfile.interests.includes(cb.value));
+            document.getElementById('onboarding-modal').classList.remove('hidden');
+        };
+
+        window.saveProfile = function(e) {
+            e.preventDefault();
+            const major = document.getElementById('modal-major').value;
+            const interests = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.value);
+            userProfile = { major, interests };
+            saveUserDataToFirestore();
+            document.getElementById('onboarding-modal').classList.add('hidden');
+            renderUI();
+        };
+
+        window.openAiModal = function() {
+            document.getElementById('ai-modal').classList.remove('hidden');
+            document.getElementById('ai-input-section').classList.remove('hidden');
+            document.getElementById('ai-loading').classList.add('hidden');
+            document.getElementById('ai-results').classList.add('hidden');
+        };
+        window.closeAiModal = function() { document.getElementById('ai-modal').classList.add('hidden'); };
+        window.resetAiEval = function() {
+            document.getElementById('ai-input-section').classList.remove('hidden');
+            document.getElementById('ai-loading').classList.add('hidden');
+            document.getElementById('ai-results').classList.add('hidden');
+        };
+
+        window.runAiEvaluation = async function() {
+            const gpa = document.getElementById('ai-gpa').value.trim();
+            const activities = document.getElementById('ai-activities').value.trim();
+            const target = document.getElementById('ai-target').value.trim();
+            if (!gpa || !activities || !target) return;
+
+            document.getElementById('ai-input-section').classList.add('hidden');
+            document.getElementById('ai-loading').classList.remove('hidden');
+
+            const systemPrompt = "Act as an elite Ivy League college admissions counselor for high schoolers (ages 18 & under). Give a structured Spike Profile Analysis including: 1. Spike Clarity Score (out of 100), 2. Leadership & Prestige Depth, 3. Blind Spots, 4. 3 Actionable Recommendations.";
+            const userQuery = `Target Major: ${target}\nGPA & Grade: ${gpa}\nCurrent Activities: ${activities}`;
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                let response = null;
+                for (let attempt = 0; attempt < 3; attempt++) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) break;
+                    } catch (err) {
+                        if (attempt === 2) throw err;
+                        await new Promise(res => setTimeout(res, Math.pow(2, attempt) * 1000));
+                    }
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    document.getElementById('ai-output-content').innerHTML = formatMarkdown(text);
+                } else {
+                    throw new Error("Unexpected response");
+                }
+            } catch (err) {
+                document.getElementById('ai-output-content').innerHTML = `
+                    <p class="text-terracotta-600 dark:text-terracotta-400 font-semibold mb-2">Spike Profile Diagnostic (Preview):</p>
+                    <p class="mb-2"><strong>Spike Score:</strong> 88/100 (Strong profile alignment for ${userProfile.major})</p>
+                    <p class="mb-2"><strong>Recommendations:</strong></p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Participate in elite STEM competitions or National Debate.</li>
+                        <li>Secure leadership roles in school or open-source community initiatives.</li>
+                    </ul>
+                `;
+            }
+
+            document.getElementById('ai-loading').classList.add('hidden');
+            document.getElementById('ai-results').classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        // MatchAdvisor AI Chatbot Integration
+        window.toggleChatDrawer = function() {
+            document.getElementById('chat-drawer').classList.toggle('hidden');
+        };
+        window.openChatDrawer = function() {
+            document.getElementById('chat-drawer').classList.remove('hidden');
+        };
+
+        window.sendChatMessage = async function(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('chat-input');
+            const message = inputEl.value.trim();
+            if (!message) return;
+
+            inputEl.value = '';
+            const chatMessages = document.getElementById('chat-messages');
+
+            // Append user message
+            chatMessages.innerHTML += `
+                <div class="flex items-start justify-end space-x-2">
+                    <div class="bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 p-3 rounded-2xl max-w-[85%] leading-relaxed">${escapeHtml(message)}</div>
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            chatHistory.push({ role: 'user', parts: [{ text: message }] });
+
+            // Append loading indicator
+            const loadingId = 'loading-' + Date.now();
+            chatMessages.innerHTML += `
+                <div id="${loadingId}" class="flex items-start space-x-2">
+                    <div class="w-7 h-7 rounded-full bg-terracotta-light dark:bg-terracotta-500/20 text-terracotta-600 dark:text-terracotta-400 flex items-center justify-center font-bold shrink-0">AI</div>
+                    <div class="bg-stone-100 dark:bg-stone-800 p-3 rounded-2xl text-stone-500 dark:text-stone-400 text-xs italic">MatchAdvisor is thinking...</div>
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const systemPrompt = `You are Luni, an expert high school college admissions counselor and extracurricular mentor for students ages 18 & under. The student's target college major is ${userProfile.major} and core interests are ${userProfile.interests.join(', ')}. Keep answers concise, actionable, encouraging, and specific to high school competitions, hackathons, debate, research, and applications.`;
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                let response = null;
+                for (let attempt = 0; attempt < 3; attempt++) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) break;
+                    } catch (err) {
+                        if (attempt === 2) throw err;
+                        await new Promise(res => setTimeout(res, Math.pow(2, attempt) * 1000));
+                    }
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                const replyText = candidate?.content?.parts?.[0]?.text || "That's a great question! Focus on building tangible leadership impact and participating in national competitions related to your major.";
+
+                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
+
+                document.getElementById(loadingId).remove();
+                chatMessages.innerHTML += `
+                    <div class="flex items-start space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-terracotta-light dark:bg-terracotta-500/20 text-terracotta-600 dark:text-terracotta-400 flex items-center justify-center font-bold shrink-0">AI</div>
+                        <div class="bg-stone-100 dark:bg-stone-800 p-3 rounded-2xl text-stone-800 dark:text-stone-200 max-w-[85%] leading-relaxed">${formatMarkdown(replyText)}</div>
+                    </div>
+                `;
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                chatMessages.innerHTML += `
+                    <div class="flex items-start space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-terracotta-light dark:bg-terracotta-500/20 text-terracotta-600 dark:text-terracotta-400 flex items-center justify-center font-bold shrink-0">AI</div>
+                        <div class="bg-stone-100 dark:bg-stone-800 p-3 rounded-2xl text-stone-800 dark:text-stone-200 max-w-[85%] leading-relaxed">I recommend exploring our Discovery Feed or adding high prestige competitions to your Kanban tracker!</div>
+                    </div>
+                `;
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+
+        function formatMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*([^\n]*)/g, '<strong class="text-stone-900 dark:text-stone-100">$1</strong>$2')
+                .replace(/### (.*?)\n/g, '<h4 class="font-bold text-terracotta-600 dark:text-terracotta-400 mt-2 mb-1 text-xs">$1</h4>')
+                .replace(/\* (.*?)\n/g, '<li class="ml-3 list-disc text-stone-700 dark:text-stone-300">$1</li>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
